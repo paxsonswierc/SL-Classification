@@ -1,0 +1,168 @@
+DATASET:
+    NAME: SimpleEinsteinRing
+    PARAMETERS:
+        SIZE: 2500
+        OUTDIR: MySimulationResults
+
+COSMOLOGY:
+    PARAMETERS:
+        H0: 70
+        Om0: 0.3
+
+IMAGE:
+    PARAMETERS:
+        exposure_time: 90
+        numPix: 100
+        pixel_scale: 0.263
+        psf_type: 'GAUSSIAN'
+        read_noise: 7
+        ccd_gain: 6.083
+
+SURVEY:
+    PARAMETERS:
+        BANDS: r, g, b
+        seeing: 0.9
+        magnitude_zero_point: 30.0
+        sky_brightness: 30.0
+        num_exposures: 10
+
+SPECIES:
+    GALAXY_1:
+        NAME: Lens
+        LIGHT_PROFILE_1:
+            NAME: SERSIC_ELLIPSE
+            PARAMETERS:
+                magnitude: 19.5
+                center_x: 0.0
+                center_y: 0.0
+                R_sersic:
+                    DISTRIBUTION:
+                        NAME: normal
+                        PARAMETERS:
+                            mean: 6.0
+                            std: 1.5
+                n_sersic: 4
+                e1: # controls half of the eccentricity of the galaxy
+                    DISTRIBUTION: # draw from a distribution to give the dataset diversity
+                        NAME: uniform # use a uniform distribution on (-1,1)
+                        PARAMETERS:
+                            minimum: -0.1
+                            maximum: 0.1
+                e2: # controls other half of the eccentricity of the galaxy
+                    DISTRIBUTION: # draw from a distribution to give the dataset diversity
+                        NAME: uniform # use a uniform distribution on (-1,1)
+                        PARAMETERS:
+                            minimum: -0.1
+                            maximum: 0.1
+
+        MASS_PROFILE_1:
+            NAME: SIE
+            PARAMETERS:
+                theta_E: # the einstein radius
+                    DISTRIBUTION: 
+                        NAME: uniform # can be from 0.5 to 10
+                        PARAMETERS:
+                            minimum: 0.5
+                            maximum: 5
+                e1: # controls half of the eccentricity of the galaxy's mass distribution
+                    DISTRIBUTION: # draw from a distribution to give the dataset diversity
+                        NAME: uniform # use a uniform distribution on (-1,1)
+                        PARAMETERS:
+                            minimum: -0.1
+                            maximum: 0.1
+                e2: # controls other half of the eccentricity of the galaxy's mass distribution
+                    DISTRIBUTION: # draw from a distribution to give the dataset diversity
+                        NAME: uniform # use a uniform distribution on (-1,1)
+                        PARAMETERS:
+                            minimum: -0.1
+                            maximum: 0.1
+                center_x: 0.0
+                center_y: 0.0 
+                
+    GALAXY_2:
+        NAME: Source
+        LIGHT_PROFILE_1:
+            NAME: SERSIC_ELLIPSE
+            PARAMETERS:
+                magnitude: 19.5
+                center_x: 0
+                center_y: 0
+                R_sersic:
+                    DISTRIBUTION:
+                        NAME: normal
+                        PARAMETERS:
+                            mean: 6.0
+                            std: 1.5
+                n_sersic: 4
+                e1: # controls half of the eccentricity of the galaxy
+                    DISTRIBUTION: # draw from a distribution to give the dataset diversity
+                        NAME: uniform # use a uniform distribution on (-1,1)
+                        PARAMETERS:
+                            minimum: -0.1
+                            maximum: 0.1
+                e2: # controls other half of the eccentricity of the galaxy
+                    DISTRIBUTION: # draw from a distribution to give the dataset diversity
+                        NAME: uniform # use a uniform distribution on (-1,1)
+                        PARAMETERS:
+                            minimum: -0.1
+                            maximum: 0.1
+        MASS_PROFILE_1:
+            NAME: SIE
+            PARAMETERS:
+                theta_E: 2.0
+                e1: 0.1
+                e2: -0.1
+                center_x: 0.0
+                center_y: 0.0
+                            
+    GALAXY_3: # completely dark object
+        NAME: Dark
+        LIGHT_PROFILE_1:
+            NAME: SERSIC_ELLIPSE
+            PARAMETERS:
+                magnitude: 100 
+                center_x: 0.0 
+                center_y: 0.0 
+                R_sersic: 1.0 
+                n_sersic: 1.0 
+                e1: 0.5
+                e2: 0.5
+
+        MASS_PROFILE_1:
+            NAME: SIE
+            PARAMETERS:
+                theta_E: 2.0
+                e1: 0.1
+                e2: -0.1
+                center_x: 0.0
+                center_y: 0.0
+                
+GEOMETRY:
+    CONFIGURATION_1: 
+        NAME: GalaxyAGN
+        FRACTION: 0.50
+        PLANE_1: 
+            OBJECT_1: Lens 
+            PARAMETERS:
+                REDSHIFT: 0.5
+        PLANE_2:
+            OBJECT_1: Source
+            PARAMETERS:
+                REDSHIFT: 2.0
+ 
+    CONFIGURATION_2:
+        NAME: JustAGalaxy
+        FRACTION: 0.50
+        PLANE_1:
+            OBJECT_1: Lens
+            PARAMETERS:
+                REDSHIFT:
+                    DISTRIBUTION:
+                        NAME: uniform
+                        PARAMETERS:
+                            minimum: 0.05
+                            maximum: 0.3
+        PLANE_2:
+            OBJECT_1: Dark
+            PARAMETERS:
+                REDSHIFT: 2.0
